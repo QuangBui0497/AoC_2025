@@ -1,4 +1,4 @@
-#include "input_helper.h"
+#include "../input_helper.h"
 
 constexpr int MAX_NUM = 100;
 constexpr int MIN_NUM = 0;
