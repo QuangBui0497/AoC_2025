@@ -42,7 +42,8 @@ int main()
         current_point = calculate(current_point, temp, pair.dir);
     }
 
-    std::cout << "Result: " << count_zero +  count_pass_zero << std::endl;
+    std::cout << "Result part 1: " << count_zero << std::endl;
+    std::cout << "Result part 2: " << count_zero +  count_pass_zero << std::endl;
 
     return 0;
 }
