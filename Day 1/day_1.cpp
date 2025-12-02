@@ -19,7 +19,6 @@ int reduce(int num, int& pass_zero)
     if(num <= MAX_NUM)
         return num;
     ++pass_zero;
-    // std::cout << "Count pass zero: " << pass_zero << std::endl;
     return reduce(num - MAX_NUM, pass_zero);
 }
 
