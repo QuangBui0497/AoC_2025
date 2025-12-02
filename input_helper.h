@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstdlib>
+#include <math.h>
 
 class InputHelper
 {
@@ -46,6 +47,43 @@ public:
     }
 
     /////////////////////////////////////////////// DAY 2 ///////////////////////////////////////////////
+
+    struct ID {
+        long long int first;
+        long long int last;
+    };
+
+    static std::vector<ID> read_file2(const std::string& filename)
+    {
+        std::ifstream in(filename);
+        if (!in) 
+        {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+
+        std::vector<ID> commands;
+        std::string line;
+
+        while (std::getline(in, line)) 
+        {
+            if (line.empty()) continue;          
+            if (line.back() == '\r')             
+                line.pop_back();
+
+            std::stringstream ss(line);
+            std::string token;
+
+            while (std::getline(ss, token, ','))
+            {
+                auto dash = token.find('-');
+                long long int first = std::stoll(token.substr(0, dash));
+                long long int last  = std::stoll(token.substr(dash + 1));
+                commands.push_back({ first, last });
+            }
+        }
+
+        return commands;
+    }
 };
 
 #endif // INPUT_HELPER_H
