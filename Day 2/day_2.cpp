@@ -24,10 +24,49 @@ void helper(long long int first, long long int last, long long int digits, long 
     }
 }
 
-int main()
+void helper_2(long long int first, long long int last, long long int& total)
 {
-    auto list = InputHelper::read_file2("day_2_input.txt");
+    for(long long int num = first; num <= last; ++num)
+    {
+        long long int digits = count_digits(num);
 
+        for(long long int pattern_length = 1; pattern_length <= digits / 2; ++pattern_length)
+        {
+            long long int pattern_count = digits / pattern_length;
+
+            if(pattern_count < 2 || digits % pattern_length != 0)
+                continue;
+
+            bool is_repeated = true;
+
+            if(digits % pattern_length == 0)
+            {
+                long long int pow_result = std::pow(10, pattern_length);
+                long long int quotient = num;
+                long long int remainder = static_cast<long long int>(num % pow_result);
+                
+                while(quotient > 0)
+                {
+                    if(quotient % pow_result != remainder)
+                    {
+                        is_repeated = false;
+                        break;
+                    }
+                    quotient /= pow_result;
+                }
+            }
+
+            if(is_repeated)
+            {
+                total += num;
+                break; // Once per number
+            }
+        }
+    }
+}
+
+void part_1(const std::vector<InputHelper::ID>& list)
+{
     long long int total = 0;
 
     for(auto const& pair : list)
@@ -57,5 +96,24 @@ int main()
     }
 
     std::cout << "Result part 1: " << total << std::endl;
+}
+
+void part_2(const std::vector<InputHelper::ID>& list)
+{
+    long long int total = 0;
+
+    for(auto const& pair : list)
+        helper_2(pair.first, pair.last, total);
+
+    std::cout << "Result part 2: " << total << std::endl;
+}
+
+int main()
+{
+    auto list = InputHelper::read_file2("day_2_input.txt");
+
+    part_1(list);
+    part_2(list);
+
     return 0;
 }
