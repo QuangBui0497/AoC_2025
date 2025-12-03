@@ -84,6 +84,33 @@ public:
 
         return commands;
     }
+
+    /////////////////////////////////////////////// DAY 3 ///////////////////////////////////////////////
+
+    static std::vector<std::string> read_file3(const std::string& filename)
+    {
+        std::ifstream in(filename);
+        if (!in) 
+        {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+
+        std::vector<std::string> commands;
+        std::string line;
+
+        while (std::getline(in, line)) 
+        {
+            if (line.empty()) continue;          
+            if (line.back() == '\r')             
+                line.pop_back();
+
+            std::stringstream ss(line);
+
+            commands.push_back(line);
+        }
+
+        return commands;
+    }
 };
 
 #endif // INPUT_HELPER_H
