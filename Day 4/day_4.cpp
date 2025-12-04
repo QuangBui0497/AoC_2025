@@ -57,18 +57,19 @@ struct Vector2
     int y;
 };
 
-void part_2(std::vector<std::string>& list)
+void part_2(const std::vector<std::string>& list)
 {
     int total_rolls = 0;
+    auto clone = list;
     
     while(true)
     {
         std::vector<Vector2> pos_list;
-        for(int row = 0; row != list.size(); ++row)
+        for(int row = 0; row != clone.size(); ++row)
         {
-            for(int col = 0; col != list[row].size(); ++col)
+            for(int col = 0; col != clone[row].size(); ++col)
             {
-                if(list[row][col] != '@')
+                if(clone[row][col] != '@')
                     continue;
 
                 int neighbor_count = 0;
@@ -83,10 +84,10 @@ void part_2(std::vector<std::string>& list)
                         int row_pos = row_dir + row;
                         int col_pos = col_dir + col;
 
-                        if(row_pos < 0 || row_pos >= list.size() || col_pos < 0 || col_pos >= list[row].size())
+                        if(row_pos < 0 || row_pos >= clone.size() || col_pos < 0 || col_pos >= clone[row].size())
                             continue;
                         
-                        if(list[row_pos][col_pos] == '@')
+                        if(clone[row_pos][col_pos] == '@')
                             ++neighbor_count;
                     }
                 }
@@ -104,7 +105,7 @@ void part_2(std::vector<std::string>& list)
 
         for(auto const& pair : pos_list)
         {
-            list[pair.x][pair.y] = '.';
+            clone[pair.x][pair.y] = '.';
         }
     }
 
