@@ -50,19 +50,18 @@ std::pair<lazy, lazy> merge(const std::pair<lazy, lazy>& current_interval, const
     return merged_list[current_index];
 }   
 
-void part_2(const std::vector<std::pair<lazy, lazy>>& list)
+void part_2(std::vector<std::pair<lazy, lazy>> list)
 {
-    lazy total_fresh_id = 0;
-    auto ranges = list;    
+    lazy total_fresh_id = 0;   
     std::vector<std::pair<lazy, lazy>> merged_list;
-    std::sort(ranges.begin(), ranges.end());
+    std::sort(list.begin(), list.end());
 
-    std::pair<lazy, lazy> current_interval = {ranges[0].first, ranges[0].second};
+    std::pair<lazy, lazy> current_interval = {list[0].first, list[0].second};
     merged_list.push_back(current_interval);
 
-    for(std::size_t i = 1; i < ranges.size(); ++i)
+    for(std::size_t i = 1; i < list.size(); ++i)
     {
-        std::pair<lazy, lazy> next_interval = {ranges[i].first, ranges[i].second};
+        std::pair<lazy, lazy> next_interval = {list[i].first, list[i].second};
         current_interval = merge(current_interval, next_interval, merged_list);
     }
 
