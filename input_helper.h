@@ -9,6 +9,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <math.h>
+#include <unordered_map>
+#include <algorithm>
+#include <utility>
+
+using lazy = long long int;
 
 class InputHelper
 {
@@ -49,8 +54,8 @@ public:
     /////////////////////////////////////////////// DAY 2 ///////////////////////////////////////////////
 
     struct ID {
-        long long int first;
-        long long int last;
+        lazy first;
+        lazy last;
     };
 
     static std::vector<ID> read_file2(const std::string& filename)
@@ -76,8 +81,8 @@ public:
             while (std::getline(ss, token, ','))
             {
                 auto dash = token.find('-');
-                long long int first = std::stoll(token.substr(0, dash));
-                long long int last  = std::stoll(token.substr(dash + 1));
+                lazy first = std::stoll(token.substr(0, dash));
+                lazy last  = std::stoll(token.substr(dash + 1));
                 commands.push_back({ first, last });
             }
         }
@@ -110,6 +115,48 @@ public:
         }
 
         return commands;
+    }
+
+    /////////////////////////////////////////////// DAY 5 ///////////////////////////////////////////////
+
+    static std::pair<std::vector<std::pair<lazy, lazy>>, std::vector<lazy> > read_file4(const std::string& filename)
+    {
+        std::ifstream in(filename);
+        if (!in) 
+        {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+
+        std::vector<std::pair<lazy, lazy>> id_range;
+        std::vector<lazy> ingredient_id;
+        std::string line;
+
+        while (std::getline(in, line)) 
+        {
+            if (line.empty()) continue;          
+            if (line.back() == '\r')             
+                line.pop_back();
+
+            std::stringstream ss(line);
+            std::string token;
+
+            while (std::getline(ss, line))
+            {
+                auto dash = line.find('-');
+                if(dash != std::string::npos)
+                {
+                    lazy first = std::stoll(line.substr(0, dash));
+                    lazy last  = std::stoll(line.substr(dash + 1));
+                    id_range.push_back({first, last});
+                }
+                else
+                {
+                    ingredient_id.push_back(std::stoll(line));
+                }
+            }
+        }
+
+        return std::pair{id_range, ingredient_id};
     }
 };
 
