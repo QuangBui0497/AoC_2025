@@ -138,7 +138,6 @@ public:
                 line.pop_back();
 
             std::stringstream ss(line);
-            std::string token;
 
             while (std::getline(ss, line))
             {
@@ -157,6 +156,56 @@ public:
         }
 
         return std::pair{id_range, ingredient_id};
+    }
+
+    /////////////////////////////////////////////// DAY 6 ///////////////////////////////////////////////
+
+    static std::vector<std::vector<lazy>> read_file5(const std::string& filename)
+    {
+        std::ifstream in(filename);
+        if (!in) 
+        {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+
+        constexpr int PLUS = -1;
+        constexpr int MULT = -2;
+
+        std::vector<std::vector<lazy>> problem_set;
+        std::vector<lazy> row_of_num;
+
+        std::string line;
+
+        while (std::getline(in, line)) 
+        {
+            if (line.empty()) continue;          
+            if (line.back() == '\r' || line.back() == '\t')             
+                line.pop_back();
+
+            std::stringstream ss(line);
+            std::string token;
+
+            while (ss >> token)
+            {
+                if(token == "+")
+                {
+                    row_of_num.push_back(-1);
+                    continue;
+                }
+
+                if(token == "*")
+                {
+                    row_of_num.push_back(-2);
+                    continue;
+                }
+
+                int num = std::stoi(token);
+                row_of_num.push_back(num);
+            }
+            problem_set.push_back(row_of_num);
+            row_of_num.clear();
+        }
+        return problem_set;
     }
 };
 
