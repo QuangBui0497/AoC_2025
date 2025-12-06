@@ -100,7 +100,6 @@ void part_2(const lazy_matrix_str& list)
     lazy plus_total = 0;
     lazy mult_total = 1;
     std::string op;
-    std::string prev_op;
     bool get_op = false;
 
     for(const auto& vec : transformed_list)
@@ -115,11 +114,7 @@ void part_2(const lazy_matrix_str& list)
 
         if(num == ERR)
         {
-            if(mult_total > 1)
-                total += plus_total + mult_total;
-            else
-                total += plus_total;
-
+            mult_total > 1 ? total += plus_total + mult_total : total += plus_total;
             plus_total = 0;
             mult_total = 1;
             get_op = !get_op;
@@ -127,21 +122,12 @@ void part_2(const lazy_matrix_str& list)
         }
 
         if(op == PLUS_STR)
-        {
-            plus_total += num;  
-            prev_op = op; 
-        }
+            plus_total += num;
 
         if(op == MULT_STR)
-        {
             mult_total *= num;
-            prev_op = op;
-        }
     }
-    if(mult_total > 1)
-        total += plus_total + mult_total;
-    else
-        total += plus_total;
+    mult_total > 1 ? total += plus_total + mult_total : total += plus_total;
     std::cout << "Result part 2: " << total << std::endl;
 }
 
