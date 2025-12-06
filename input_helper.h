@@ -14,6 +14,8 @@
 #include <utility>
 
 using lazy = long long int;
+using lazy_matrix = std::vector<std::vector<lazy>>;
+using lazy_matrix_str = std::vector<std::vector<std::string>>;
 
 class InputHelper
 {
@@ -160,7 +162,7 @@ public:
 
     /////////////////////////////////////////////// DAY 6 ///////////////////////////////////////////////
 
-    static std::vector<std::vector<lazy>> read_file5(const std::string& filename)
+    static std::pair<lazy_matrix, lazy_matrix_str> read_file5(const std::string& filename)
     {
         std::ifstream in(filename);
         if (!in) 
@@ -168,11 +170,10 @@ public:
             throw std::runtime_error("Failed to open file: " + filename);
         }
 
-        constexpr int PLUS = -1;
-        constexpr int MULT = -2;
-
-        std::vector<std::vector<lazy>> problem_set;
-        std::vector<lazy> row_of_num;
+        lazy_matrix part_1_list;
+        lazy_matrix_str part_2_list;
+        std::vector<lazy> row_of_num_part_1;
+        
 
         std::string line;
 
@@ -185,27 +186,46 @@ public:
             std::stringstream ss(line);
             std::string token;
 
+            std::vector<std::string> row_of_num_part_2;
+
+            for (size_t i = 0; i < line.size(); ++i)
+            {
+                char c = line[i];
+
+                if (c == ' ')
+                    row_of_num_part_2.push_back("0");
+                else if (c == '+')
+                    row_of_num_part_2.push_back("-1");
+                else if (c == '*')
+                    row_of_num_part_2.push_back("-2");
+                else
+                    row_of_num_part_2.push_back(std::string{c});
+            }
+
+            part_2_list.push_back(row_of_num_part_2);
+            row_of_num_part_2.clear();
+
             while (ss >> token)
             {
                 if(token == "+")
                 {
-                    row_of_num.push_back(-1);
+                    row_of_num_part_1.push_back(-1);
                     continue;
                 }
 
                 if(token == "*")
                 {
-                    row_of_num.push_back(-2);
+                    row_of_num_part_1.push_back(-2);
                     continue;
                 }
 
                 int num = std::stoi(token);
-                row_of_num.push_back(num);
+                row_of_num_part_1.push_back(num);
             }
-            problem_set.push_back(row_of_num);
-            row_of_num.clear();
+            part_1_list.push_back(row_of_num_part_1);
+            row_of_num_part_1.clear();
         }
-        return problem_set;
+        return {part_1_list, part_2_list};
     }
 };
 
