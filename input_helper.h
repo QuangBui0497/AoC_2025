@@ -13,9 +13,93 @@
 #include <algorithm>
 #include <utility>
 
+struct JunctionBox;
+struct Edge;
+
 using lazy = long long int;
 using lazy_matrix = std::vector<std::vector<lazy>>;
+using lazy_vector = std::vector<lazy>;
+using lazy_box = std::vector<JunctionBox>;
+using lazy_edge = std::vector<Edge>;
 using lazy_matrix_str = std::vector<std::vector<std::string>>;
+
+struct JunctionBox
+{
+    lazy m_x, m_y, m_z;
+};
+
+struct Edge 
+{
+    Edge(std::size_t index_1, std::size_t index_2, lazy dist)
+        : m_box_1_index{index_1}, m_box_2_index{index_2}, m_dist{dist} {}
+
+    std::size_t m_box_1_index, m_box_2_index;
+    lazy m_dist;
+};
+
+struct UnionFind
+{
+    UnionFind(int n)
+    {
+        parent.resize(n);
+        circuit_size_list.resize(n, 1);
+        for (int i = 0; i < n; ++i)
+            parent[i] = i;
+    }
+
+    lazy_vector parent;
+    lazy_vector circuit_size_list;
+    lazy_edge edge_list;
+
+    int find(std::size_t a)
+    {
+        if (parent[a] != a)
+            parent[a] = find(parent[a]);
+        return parent[a];
+    }
+
+    void merge(std::size_t a, std::size_t b)
+    {
+        a = find(a);
+        b = find(b);
+
+        if (a == b) 
+            return;
+
+        if (circuit_size_list[a] < circuit_size_list[b])
+        {
+            parent[a] = b;
+            circuit_size_list[b] += circuit_size_list[a];
+        }
+        else
+        {
+            parent[b] = a;
+            circuit_size_list[a] += circuit_size_list[b];
+        }
+    }
+
+    void merge_2(Edge edge)
+    {
+        std::size_t a = find(edge.m_box_1_index);
+        std::size_t b = find(edge.m_box_2_index);
+
+        if (a == b) 
+            return;
+
+        if (circuit_size_list[a] < circuit_size_list[b])
+        {
+            parent[a] = b;
+            circuit_size_list[b] += circuit_size_list[a];
+        }
+        else
+        {
+            parent[b] = a;
+            circuit_size_list[a] += circuit_size_list[b];
+        }
+
+        edge_list.push_back(edge);
+    }
+};
 
 class InputHelper
 {
@@ -226,6 +310,47 @@ public:
             row_of_num_part_1.clear();
         }
         return {part_1_list, part_2_list};
+    }
+
+    /////////////////////////////////////////////// DAY 8 ///////////////////////////////////////////////
+
+    static lazy_box read_file6(const std::string& filename)
+    {
+        std::ifstream in(filename);
+        if (!in) 
+        {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+
+        lazy_box boxes;
+        lazy_vector coordinate;
+
+        std::string line;
+
+        while (std::getline(in, line)) 
+        {
+            if (line.empty()) continue;          
+            if (line.back() == '\r')             
+                line.pop_back();
+
+            std::stringstream ss(line);
+            std::string token;
+
+            while (std::getline(ss, token, ','))
+            {
+                coordinate.push_back(std::stoll(token));
+            }
+            // create box
+            JunctionBox box;
+            box.m_x = coordinate[0];
+            box.m_y = coordinate[1];
+            box.m_z = coordinate[2];
+
+            boxes.push_back(box);
+            coordinate.clear();
+        }
+
+        return boxes;
     }
 };
 
